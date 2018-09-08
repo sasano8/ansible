@@ -1,6 +1,6 @@
-- hosts: localhost
+- hosts: ap
   tasks:
-    - name: make download soft dir
+    - name: make download local_resources dir
       file: path=./local_resources state=directory mode=777
 
     - name: download oracle jdk 8
