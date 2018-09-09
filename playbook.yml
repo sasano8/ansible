@@ -18,7 +18,7 @@
 
     - name: unarchive wildfly
       become: true
-      unarchive: src=./local_resources/wildfly-9.0.2.Final.tar.gz dest=/opt
+      unarchive: src=./local_resources/wildfly-9.0.2.Final.tar.gz dest=/opt owner=ec2-user group=ec2-user
 
     - name: observe file
       stat: path=/opt/wildfly
@@ -29,9 +29,59 @@
       command: mv /opt/wildfly-9.0.2.Final /opt/wildfly
       when: not stat_wildfly.stat.exists
 
-    - name: setup wildfly service
+    - lineinfile:
+        dest: /opt/wildfly/bin/init.d/wildfly.conf
+        state: present
+        insertafter: '# JBOSS_HOME="/opt/wildfly"'
+        line: 'JBOSS_HOME="/opt/wildfly'
+
+    - lineinfile:
+        dest=/opt/wildfly/bin/init.d/wildfly.conf
+        state=present
+        insertafter='# JBOSS_USER=wildfly'
+        line='JBOSS_USER=ec2-user'
+
+    - lineinfile:
+        dest=/opt/wildfly/bin/init.d/wildfly.conf
+        state=present
+        insertafter='# JBOSS_MODE=standalone'
+        line='JBOSS_MODE=standalone'
+
+    - lineinfile:
+        dest=/opt/wildfly/bin/init.d/wildfly.conf
+        state=present
+        insertafter='# JBOSS_CONFIG=standalone.xml'
+        line='JBOSS_CONFIG=standalone.xml'
+
+    - lineinfile:
+        dest=/opt/wildfly/bin/init.d/wildfly.conf
+        state=present
+        insertafter='# JBOSS_CONSOLE_LOG="/var/log/wildfly/console.log"'
+        line='JBOSS_CONSOLE_LOG=/var/log/wildfly/console.log'
+
+    - name: make download local_resources dir
       become: true
-      command: /opt/wildfly/bin/init.d/wildfly-init-redhat.sh
+      file: path=/etc/init.d/wildfly state=directory
+
+    - name: make download local_resources dir
+      become: true
+      file: path=/etc/default/wildfly state=directory
+
+    - name: register init.d
+      become: true
+      copy:
+        src: /opt/wildfly/bin/init.d/wildfly-init-redhat.sh
+        dest: /etc/init.d/wildfly
+
+    - name: copy wildfly config
+      become: true
+      copy:
+        src: /opt/wildfly/bin/init.d/wildfly.conf
+        dest: /etc/default/widlfly
+
+#    - name: setup wildfly service
+#      become: true
+#      command: /opt/wildfly/bin/init.d/wildfly-init-redhat.sh
 
     - name: start service
       become: true

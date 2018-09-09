@@ -1,5 +1,10 @@
 # ansible
 
+This project is uncompleted.
+
+# issue
+- Can not register service(systemd).
+
 # getting started
 
 ```
