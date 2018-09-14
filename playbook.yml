@@ -33,7 +33,7 @@
         dest: /opt/wildfly/bin/init.d/wildfly.conf
         state: present
         insertafter: '# JBOSS_HOME="/opt/wildfly"'
-        line: 'JBOSS_HOME="/opt/wildfly'
+        line: 'JBOSS_HOME="/opt/wildfly"'
 
     - lineinfile:
         dest=/opt/wildfly/bin/init.d/wildfly.conf
@@ -57,15 +57,7 @@
         dest=/opt/wildfly/bin/init.d/wildfly.conf
         state=present
         insertafter='# JBOSS_CONSOLE_LOG="/var/log/wildfly/console.log"'
-        line='JBOSS_CONSOLE_LOG=/var/log/wildfly/console.log'
-
-#    - name: make download local_resources dir
-#      become: true
-#      file: path=/etc/init.d/wildfly state=directory
-
-#    - name: make download local_resources dir
-#      become: true
-#      file: path=/etc/default/wildfly state=directory
+        line='JBOSS_CONSOLE_LOG="/var/log/wildfly/console.log"'
 
     - name: register init.d
       become: true
@@ -78,18 +70,14 @@
       command: "chmod +x /etc/init.d/wildfly"
 
     - name: set service on boot(deprecated -- you'd better use sys-rc-conf --add wildfly)
-      become:true
+      become: true
       command: "chkconfig --add wildfly"
 
-#    - name: copy wildfly config
-#      become: true
-#      copy:
-#        src: /opt/wildfly/bin/init.d/wildfly.conf
-#        dest: /etc/default/widlfly
-
-#    - name: setup wildfly service
-#      become: true
-#      command: /opt/wildfly/bin/init.d/wildfly-init-redhat.sh
+    - name: copy wildfly config
+      become: true
+      copy:
+        src: /opt/wildfly/bin/init.d/wildfly.conf
+        dest: /etc/default/wildfly
 
     - name: start service
       become: true
