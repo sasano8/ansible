@@ -1,4 +1,5 @@
 - hosts: ap
+  become: true  
   tasks:
     - name: make download local_resources dir
       file: path=./local_resources state=directory mode=777
@@ -32,14 +33,20 @@
     - lineinfile:
         dest: /opt/wildfly/bin/init.d/wildfly.conf
         state: present
-        insertafter: '# JBOSS_HOME="/opt/wildfly"'
+        insertafter: '# JAVA_HOME="/usr/lib/jvm/default-java"'
+        line: 'JAVA_HOME="/usr/java/jdk1.8.0_181-amd64"'
+
+    - lineinfile:
+        dest: /opt/wildfly/bin/init.d/wildfly.conf
+        state: present
+        insertafter: '# JBOSS_HOME="/opt/wildfl"'
         line: 'JBOSS_HOME="/opt/wildfly"'
 
     - lineinfile:
         dest=/opt/wildfly/bin/init.d/wildfly.conf
         state=present
         insertafter='# JBOSS_USER=wildfly'
-        line='JBOSS_USER=ec2-user'
+        line='JBOSS_USER=root'
 
     - lineinfile:
         dest=/opt/wildfly/bin/init.d/wildfly.conf
@@ -77,9 +84,15 @@
       become: true
       copy:
         src: /opt/wildfly/bin/init.d/wildfly.conf
-        dest: /etc/default/wildfly
+        dest: /etc/default/wildfly.conf
 
     - name: start service
       become: true
       service: name=wildfly state=started
 
+    - name: check network
+      command: "curl localhost:8080"
+
+#export JAVA_HOME=
+#export JBOSS_HOME
+# sudo /opt/wildfly/bin/add-user.sh wildfly wildfly

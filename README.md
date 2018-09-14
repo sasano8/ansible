@@ -8,6 +8,9 @@ This project is uncompleted.
 # getting started
 
 ```
+# move to work folder
+cd ~
+
 # install git
 sudo yum install -y git
 
