@@ -1,0 +1,25 @@
+- hosts: ap
+  become: true  
+  tasks:
+
+    - name: install Pip Installs Packages(package manager for python)
+      become: true
+      command: "yum install python-pip"
+
+    - name: upgrade pip
+      become: true
+      command: "python -m pip install --upgrade pip"
+
+
+    - name: install jupyter
+      become: true
+      command: "python -m pip install jupyter"
+
+    - name: start service
+      async: 5
+      poll: 0
+      command: "nohup jupyter notebook --allow-root"
+
+    - name: check network
+      command: "curl localhost:8888"
+
