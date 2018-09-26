@@ -23,9 +23,11 @@
     - name: check network
       command: "curl localhost:8888"
 
-    - name: about start service in local
-      command: "Echo 'jupyter notebook  # publish as local'"
+    # サービスを開始するには以下のいずれかのコマンドを実行してください
+
+    - name: about start service in local => jupyter notebook
+      command: "true"
       
-    - name: about start service in public
-      command: "Echo 'jupyter notebook --ip=0.0.0.0  # DANGER!!! publish as public'"
+    - name: about start service in public(DANGER!!!) => jupyter notebook --ip=0.0.0.0
+      command: "true"
       
