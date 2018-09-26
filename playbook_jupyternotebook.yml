@@ -23,3 +23,9 @@
     - name: check network
       command: "curl localhost:8888"
 
+    - name: about start service in local
+      command: "Echo 'jupyter notebook  # publish as local'"
+      
+    - name: about start service in public
+      command: "Echo 'jupyter notebook --ip=0.0.0.0  # DANGER!!! publish as public'"
+      
