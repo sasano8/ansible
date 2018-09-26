@@ -1,3 +1,4 @@
 local_resources/*
 tmp/*
 *.retry
+!.gitkeep
