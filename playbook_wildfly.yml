@@ -3,7 +3,7 @@
   tasks:
 
     - name: download oracle jdk 8
-      get_url: url=http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm dest=./local_resources/jdk-8u181-linux-x64.rpm headers="Cookie:' gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'" validate_certs=no  owner=ec2-user group=ec2-user mode=744
+      get_url: url=http://download.oracle.com/otn-pub/java/jdk/8u181-b13/96a7b8442fe848ef90c96a2fad6ed6d1/jdk-8u181-linux-x64.rpm dest=./tmp/jdk-8u181-linux-x64.rpm headers="Cookie:' gpw_e24=http%3A%2F%2Fwww.oracle.com%2F; oraclelicense=accept-securebackup-cookie'" validate_certs=no  owner=ec2-user group=ec2-user mode=744
 
     - name: install jdk 8 from a local file
       become: true
