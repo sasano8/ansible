@@ -7,7 +7,6 @@
 
     - name: install jdk 8 from a local file
       become: true
-      #yum: name=./local_resources/jdk-8u181-linux-x64.rpm state=present
       yum: name=./tmp/jdk-8u181-linux-x64.rpm state=present
 
     - name: download wildfly 9.0.2
