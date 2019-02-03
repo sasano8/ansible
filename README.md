@@ -35,6 +35,5 @@ ansible all -i hosts -m ping
 
 # execute playbook
 ```
-ansible-playbook playbook.yml -i hosts
-
+ansible-playbook playbooks/sample/playbook.yml -i hosts
 ```
