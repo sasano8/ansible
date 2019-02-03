@@ -1,0 +1,42 @@
+- hosts: all
+  become: true  
+  tasks:
+
+    - name: install
+      become: true
+      command: yum install -y subversion 
+
+    - name: check version
+      command: svn --version
+
+    # 任意のフォルダにレポジトリを作成します。デフォルトは下記のファイルに設定されています。
+    # /etc/sysconfig/svnserve
+    # OPTIONS="-r /var/svn"
+
+    - name: create directory
+      become: true
+      command: mkdir -p /var/svn
+
+    - name: create repository
+      become: true
+      command: svnadmin create /var/svn/repos
+
+    - name: replace svnserve.conf
+      become: true
+      replace: dest=/var/svn/repos/conf/svnserve.conf regexp="^# anon-access = read"  replace="anon-access = read" backup=yes
+
+    - name: service start
+      become: true
+      command: service svnserve start
+
+    - name: add service
+      become: true
+      command: chkconfig svnserve on
+ 
+    # svnプロトコルなどネットワークを利用する際にSE LINUXが無効化されていないと接続できない
+    - name: disable SE linux
+      become: true
+      command: setenforce 0
+
+    - name: check repository
+      command: svn list svn://localhost/repos -v
