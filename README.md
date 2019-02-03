@@ -9,7 +9,8 @@ This project is uncompleted.
 
 ```
 # move to work folder
-cd ~
+var_work_folder="$HOME"
+cd $var_work_folder
 
 # install git
 sudo yum install -y git
