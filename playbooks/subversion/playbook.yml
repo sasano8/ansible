@@ -19,11 +19,11 @@
 
     - name: create repository
       become: true
-      command: svnadmin create /var/svn/repos
+      command: svnadmin create /var/svn/my_project
 
     - name: replace svnserve.conf
       become: true
-      replace: dest=/var/svn/repos/conf/svnserve.conf regexp="^# anon-access = read"  replace="anon-access = read" backup=yes
+      replace: dest=/var/svn/my_project/conf/svnserve.conf regexp="^# anon-access = read"  replace="anon-access = write" backup=yes
 
     - name: service start
       become: true
@@ -39,4 +39,4 @@
       command: setenforce 0
 
     - name: check repository
-      command: svn list svn://localhost/repos -v
+      command: svn list svn://localhost/my_project -v
