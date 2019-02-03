@@ -11,12 +11,15 @@ SE LINUXを無効化しているので注意する。
 
 - 3690(svnプロトコル)
 
-# 使用ディレクトリ
+# リポジトリ管理用フォルダ（この配下にリポジトリを作成）
+/var/svn
+
+# サンプルリポジトリ
 /var/svn/my_project
 
 # サーバ構築後の接続確認
 ```
-svn list file:///var/svn/repos -v
-svn list svn://localhost/repos -v
+svn list file:///var/svn/my_project -v
+svn list svn://localhost/my_project -v
 ```
 
