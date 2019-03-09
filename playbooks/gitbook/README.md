@@ -4,9 +4,17 @@ gitリポジトリをドキュンメント化するサーバを構築します�
 このサーバは、複数のリポジトリを管理することはできず、単一のリポジトリをドキュメント化します。
 編集機能はありません。
 
-# サーバの起動
+# 利用サンプル
 ```
-# gitのリポジトリを指定します。（このケースでは、サンプルのリポジトリをgitbookにしています。）
+# htmlを作成
+sudo gitbook serve playbooks/gitbook/documentation
+
+# pdfを作成
+sudo gitbook pdf playbooks/gitbook/documentation sample.pdf
+
+# htmlの公開サーバを起動
 sudo gitbook serve playbooks/gitbook/documentation
 curl http://localhost:4000
 ```
+
+
