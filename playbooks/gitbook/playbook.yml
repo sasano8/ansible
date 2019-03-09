@@ -37,13 +37,18 @@
       # become: true
       command: "git clone https://github.com/GitbookIO/documentation.git"
       when: work_path is not exists
-      
+ 
+    - name: gitbook build
+    # cloneしたリポジトリを指定
+      become: true
+      command: "gitbook build {{ work_path }}"
+     
     - name: start gitbook serve
     # cloneしたリポジトリを指定
       become: true
       async: 5
       poll: 0      
-      command: "gitbook serve documentation &"
+      command: "gitbook serve {{ work_path }} &"
       
     - name: wait until stated gitbook serve
     # サーバの起動時間を考慮しテストを実行
