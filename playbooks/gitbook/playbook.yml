@@ -67,5 +67,13 @@
     #- name: get pid of gitbook and kill
       # become: true
     #  shell: "pid_gitbook=`pgrep -f 'gitbook serve'`; kill $pid_gitbook"
+    
+    - name: install wget(calibreで利用)
+      yum: name=wget state=latest
       
+    - name: install wget(calibreで利用)
+      yum: name=qt-creator state=latest
+
+    - name: install calibre(pdf, epub出力のためにgitbookが利用する)
+      shell: "sudo wget -nv -O- https://download.calibre-ebook.com/linux-installer.sh | sudo sh /dev/stdin"
 
