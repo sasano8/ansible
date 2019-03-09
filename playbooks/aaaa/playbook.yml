@@ -1,0 +1,51 @@
+- hosts: ap
+  become: true  
+  tasks:
+
+    - name: install epel
+      become: true
+      command: "yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
+      
+    - name: install node.js
+      become: true
+      command: "yum install nodejs npm --enablerepo=epel"
+      
+    - name: install gcc gcc-c++
+    # npmで利用する場合があるのでgccを入れる
+      become: true
+      command: "yum install gcc gcc-c++"
+      
+    - name: install gitbook
+      become: true
+      command: "npm install -g gitbook-cli"
+
+    - name: gitbook help
+      # become: true
+      command: "gitbook help"
+      
+    # test（別ファイルに移した方がよい）
+      
+    - name: download sample document
+      # become: true
+      command: "git clone https://github.com/GitbookIO/documentation.git"
+      
+    - name: start gitbook serve
+      # become: true
+      command: "gitbook serve &"
+      
+    - name: wait until stated gitbook serve
+    # サーバの起動時間を考慮しテストを実行
+      # become: true
+      command: "sleep 5"
+      
+    - name: test http response
+      # become: true
+      command: "curl http://localhost:4000"
+      
+    - name: get pid of gitbook
+      # become: true
+      command: "pid_gitbook=`pgrep -f 'gitbook serve'`"
+      
+    - name: kill gitbook serve
+      # become: true
+      command: "kill $pid_gitbook"
