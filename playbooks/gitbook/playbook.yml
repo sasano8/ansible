@@ -1,19 +1,27 @@
+
+
 - hosts: ap
-  become: true  
+  become: true
+  vars:
+    work_path: "{{ ansible_env.PWD }}/documentation"
+
   tasks:
+    - name: install netcat(疎通確認に利用)
+      yum: name=nc
 
     - name: install epel
-      become: true
-      command: "yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"
-      
+      #become: true
+      #command: "yum install -y https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm"     
+      yum: name="https://dl.fedoraproject.org/pub/epel/epel-release-latest-7.noarch.rpm" state=latest
+
     - name: install node.js
       become: true
-      command: "yum install nodejs npm --enablerepo=epel"
+      command: "yum install -y nodejs npm --enablerepo=epel"
       
     - name: install gcc gcc-c++
     # npmで利用する場合があるのでgccを入れる
       become: true
-      command: "yum install gcc gcc-c++"
+      command: "yum install -y gcc gcc-c++"
       
     - name: install gitbook
       become: true
@@ -28,10 +36,14 @@
     - name: download sample document
       # become: true
       command: "git clone https://github.com/GitbookIO/documentation.git"
+      when: work_path is not exists
       
     - name: start gitbook serve
-      # become: true
-      command: "gitbook serve &"
+    # cloneしたリポジトリを指定
+      become: true
+      async: 5
+      poll: 0      
+      command: "gitbook serve documentation &"
       
     - name: wait until stated gitbook serve
     # サーバの起動時間を考慮しテストを実行
@@ -40,12 +52,15 @@
       
     - name: test http response
       # become: true
-      command: "curl http://localhost:4000"
-      
-    - name: get pid of gitbook
+      #command: "curl http://localhost:4000"
+      command: nc {{ item.host }} {{ item.port }}
+      with_items:
+        - { host: localhost, port: 4000 }      
+
+    # 上手くkillが実行できないし、ansibleが勝手にプロセスをkillしてくれるので実行しない
+
+    #- name: get pid of gitbook and kill
       # become: true
-      command: "pid_gitbook=`pgrep -f 'gitbook serve'`"
+    #  shell: "pid_gitbook=`pgrep -f 'gitbook serve'`; kill $pid_gitbook"
       
-    - name: kill gitbook serve
-      # become: true
-      command: "kill $pid_gitbook"
+

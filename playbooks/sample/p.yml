@@ -1,0 +1,13 @@
+
+
+- hosts: ap
+  become: true
+  vars:
+    work_path: "{{ ansible_env.PWD }}/documentation"
+
+  tasks:
+    - name: "{{ work_path }}"
+      command: "echo test"
+      when: work_path is not exists
+
+
