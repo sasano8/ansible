@@ -1,0 +1,6 @@
+
+
+
+
+sudo curl -kL https://bootstrap.pypa.io/get-pip.py | sudo python
+sudo pip install Jinja2
