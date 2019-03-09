@@ -8,4 +8,17 @@ sudo pip install Jinja2
 python test.py
 
 
+#
+(参考)[https://qiita.com/suesan/items/4b8df8a46275a72adee2]
+
 sudo pip install Django
+
+django-admin.py startproject my_project
+python manage.py migrate
+
+# hostを許可しないと外部に公開できません。
+vi setting.py
+ALLOWED_HOSTS = [ 'localhost' ]
+
+python manage.py runserver localhost:8000
+
