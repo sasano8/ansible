@@ -1,5 +1,6 @@
 
 # SYSTEM REQUIREMENT(MINIMUM)
+# メモリが少ないと動かない
 - MEMORY 4GB
 
 # [参考](https://about.gitlab.com/install/#centos-7)
