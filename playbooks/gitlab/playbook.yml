@@ -1,0 +1,27 @@
+
+# SYSTEM REQUIREMENT(MINIMUM)
+- MEMORY 4GB
+
+# [参考](https://about.gitlab.com/install/#centos-7)
+
+# Install and configure the necessary dependencies
+sudo yum install -y curl policycoreutils-python openssh-server
+sudo systemctl enable sshd
+sudo systemctl start sshd
+# sudo firewall-cmd --permanent --add-service=http
+sudo systemctl reload firewalld
+
+
+sudo yum install postfix
+sudo systemctl enable postfix
+sudo systemctl start postfix
+
+# Add the GitLab package repository and install the package
+curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh | sudo bash
+
+
+# 公開するURLを入力してください（localhostでも大丈夫みたいだが。。。）
+sudo EXTERNAL_URL="ec2-52-68-181-232.ap-northeast-1.compute.amazonaws.com" yum install -y gitlab-ee
+
+# disable SE Linux
+setenforce 0
