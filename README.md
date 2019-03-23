@@ -35,5 +35,6 @@ ansible all -i hosts -m ping
 
 # execute playbook
 ```
-ansible-playbook $HOME/ansible/playbooks/subversion/playbook.yml -i $HOME/ansible/hosts
+app_name="sample"
+ansible-playbook $HOME/ansible/playbooks/$app_name/playbook.yml -i $HOME/ansible/hosts
 ```
