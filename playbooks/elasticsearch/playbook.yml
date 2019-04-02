@@ -56,6 +56,11 @@ sudo journalctl --unit elasticsearch
 
 curl -GET localhost:9200
 
+# 残作業
+elasticsearch-analysis-kuromoji
+
+
+
 
 # ===============================================
 # 熟読すること
