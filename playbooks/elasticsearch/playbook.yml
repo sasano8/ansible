@@ -1,0 +1,69 @@
+
+[install guide](https://www.elastic.co/guide/en/elasticsearch/reference/current/rpm.html)
+
+sudo rpm --import https://artifacts.elastic.co/GPG-KEY-elasticsearch
+
+sudo tee /etc/yum.repos.d/elasticsearch.repo << EOS
+[elasticsearch-6.x]
+name=Elasticsearch repository for 6.x packages
+baseurl=https://artifacts.elastic.co/packages/6.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+EOS
+
+# 前提パッケージのインストール
+sudo yum -y install java-1.8.0-openjdk.x86_64
+
+# elastic searchのインストール
+sudo yum -y install elasticsearch
+
+# ログの出力先
+sudo ls -ld /var/log/elasticsearch
+
+# Check SysV or SystemV(SystemV前提とする)
+ps - p 1
+
+
+
+
+# elasticsearchユーザのリソース制限を変更（nofile - ファイルディスクリプタ数の上限）
+sudo -u elasticsearch bash -c "ulimit -n" # 現在値の確認
+echo "elasticsearch    -       nofile  65536" | sudo tee -a /etc/security/limits.conf
+
+
+
+# 仮想マシンのメモリが少ないと起動に失敗したりするので注意する
+sudo cat /etc/elasticsearch/jvm.options
+
+# 標準
+# -Xms1g
+# -Xmx1g
+
+# ipアドレス・ポートの編集
+sudo vim /etc/elasticsearch/elasticsearch.yml
+
+
+# サービスの自動起動の登録
+sudo systemctl daemon-reload
+sudo systemctl enable elasticsearch.service
+sudo systemctl start elasticsearch.service
+
+# ジャーナルを購読する（標準ではジャーナルに登録されない）
+sudo journalctl --unit elasticsearch
+
+
+curl -GET localhost:9200
+
+
+# ===============================================
+# 熟読すること
+# ===============================================
+https://qiita.com/mizai/items/6f04a9c33eb0bd219c61
+[Service]
+LimitMEMLOCK=infinity
+
+
+
