@@ -43,8 +43,7 @@ sudo cat /etc/elasticsearch/jvm.options
 # -Xmx1g
 
 # ipアドレス・ポートの編集
-sudo vim /etc/elasticsearch/elasticsearch.yml
-
+echo 'network.host: "ec2-13-114-246-244.ap-northeast-1.compute.amazonaws.com"' | sudo tee -a /etc/elasticsearch/elasticsearch.yml
 
 # サービスの自動起動の登録
 sudo systemctl daemon-reload
@@ -67,3 +66,25 @@ LimitMEMLOCK=infinity
 
 
 
+
+
+# ===============================================
+# kibanaのインストール
+# ===============================================
+
+
+wget https://artifacts.elastic.co/downloads/kibana/kibana-6.7.0-x86_64.rpm
+sudo yum localinstall kibana-6.7.0-x86_64.rpm
+
+# 自ドメインを登録
+echo 'server.host: "0.0.0.0"' | sudo tee -a /etc/kibana/kibana.yml
+echo 'elasticsearch.hosts: "ec2-13-114-246-244.ap-northeast-1.compute.amazonaws.com:9200"' | sudo tee -a /etc/kibana/kibana.yml
+
+
+sudo systemctl daemon-reload
+sudo systemctl enable kibana.service
+sudo systemctl start kibana.service
+
+
+# ポート確認
+ss -antu
