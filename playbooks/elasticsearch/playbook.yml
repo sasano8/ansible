@@ -43,7 +43,7 @@ sudo cat /etc/elasticsearch/jvm.options
 # -Xmx1g
 
 # ipアドレス・ポートの編集
-echo 'network.host: "ec2-13-114-246-244.ap-northeast-1.compute.amazonaws.com"' | sudo tee -a /etc/elasticsearch/elasticsearch.yml
+echo 'network.host: "0.0.0.0"' | sudo tee -a /etc/elasticsearch/elasticsearch.yml
 
 # サービスの自動起動の登録
 sudo systemctl daemon-reload
@@ -77,13 +77,33 @@ LimitMEMLOCK=infinity
 # kibanaのインストール
 # ===============================================
 
+sudo yum install -y wget
 
-wget https://artifacts.elastic.co/downloads/kibana/kibana-6.7.0-x86_64.rpm
-sudo yum localinstall kibana-6.7.0-x86_64.rpm
+#wget https://artifacts.elastic.co/downloads/kibana/kibana-6.7.0-x86_64.rpm
+#sudo yum localinstall -y kibana-6.7.0-x86_64.rpm
 
-# 自ドメインを登録
+
+sudo tee /etc/yum.repos.d/kibana.repo << EOS
+[kibana-6.x]
+name=Kibana repository for 6.x packages
+baseurl=https://artifacts.elastic.co/packages/6.x/yum
+gpgcheck=1
+gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
+enabled=1
+autorefresh=1
+type=rpm-md
+EOS
+
+sudo yum install -y kibana
+
+# httpポートを指定
+echo 'server.port: 5601' | sudo tee -a /etc/kibana/kibana.yml
+
+# リモートアクセスを許可する
 echo 'server.host: "0.0.0.0"' | sudo tee -a /etc/kibana/kibana.yml
-echo 'elasticsearch.hosts: "ec2-13-114-246-244.ap-northeast-1.compute.amazonaws.com:9200"' | sudo tee -a /etc/kibana/kibana.yml
+
+# elasticsearch接続先を指定
+echo 'elasticsearch.hosts: ["http://localhost:9200"]' | sudo tee -a /etc/kibana/kibana.yml
 
 
 sudo systemctl daemon-reload
@@ -93,3 +113,112 @@ sudo systemctl start kibana.service
 
 # ポート確認
 ss -antu
+
+curl -GET localhost:5601
+sudo journalctl --unit kibana
+
+sudo setenforce 0
+
+/usr/share/kibana/bin/kibana-plugin
+
+
+# rpmでインストールできなかったのでdocker使ってみる
+
+
+
+yum-config-manager --enable Extraｓ
+
+
+sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+sudo yum install -y http://vault.centos.org/centos/7.3.1611/extras/x86_64/Packages/container-selinux-2.9-4.el7.noarch.rpm
+sudo yum install -y docker-ce
+
+
+
+sudo apt-get update
+sudo apt-get install -y \
+    apt-transport-https \
+    ca-certificates \
+    curl \
+    software-properties-common
+
+curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
+
+sudo apt-key fingerprint 0EBFCD88
+pub   rsa4096 2017-02-22 [SCEA]
+      9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88
+uid           [ unknown] Docker Release (CE deb) <docker@docker.com>
+sub   rsa4096 2017-02-22 [S]
+
+sudo add-apt-repository \
+   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
+   $(lsb_release -cs) \
+   stable"
+   
+sudo apt-get update
+sudo apt-get install -y docker-ce
+
+docker version
+
+
+
+# 一般ユーザーでも使えるようにdockerグループに所属させる
+sudo usermod -a -G docker ec2-user
+sudo usermod -a -G docker ubuntu
+
+sudo service docker start
+
+
+sudo curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
+sudo chmod +x /usr/local/bin/docker-compose
+docker-compose version
+
+
+sudo sysctl -w vm.max_map_count=262144
+
+
+mkdir kibana
+cd kibana
+mkdir esdata
+
+tee docker-compose.yml << EOS
+version: '3.7'
+services:
+  elasticsearch:
+    # https://hub.docker.com/_/elasticsearch/
+    image: docker.elastic.co/elasticsearch/elasticsearch:6.7.0
+    volumes:
+      - ./esdata:/usr/share/elasticsearch/data
+    environment:
+      - "ES_JAVA_OPTS=-Xms512m -Xmx512m"
+    ulimits:
+      nofile:
+        soft: 65536
+        hard: 65536
+    ports:
+      - 9200:9200
+      - 9300:9300
+    networks:
+      - esnet
+
+  kibana:
+    # https://hub.docker.com/_/kibana/
+    image: docker.elastic.co/kibana/kibana:6.7.0
+    ports:
+      - 5601:5601
+    environment:
+      ELASTICSEARCH_URL: "http://elasticsearch:9200"
+    links:
+      - elasticsearch
+    networks:
+      - esnet
+
+networks:
+  esnet:
+EOS
+
+sudo /usr/local/bin/docker-compose up -d
+sudo /usr/local/bin/docker-compose ps
+
+
+
