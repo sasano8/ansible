@@ -8,7 +8,7 @@ dockerおよびにdocker-composeの操作方法などは以下を参照とする
 # メンテナンス
 
 ```
-# コンテナへの入りた方
+# コンテナへの入り方
 sudo docker exec -it kibana_kibana_1 bash
 sudo docker exec -it kibana_elasticsearch_1 bash
 
