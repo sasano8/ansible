@@ -12,3 +12,19 @@ EOS
 sudo yum install -y mongodb-org
 
 sudo systemctl start mongod
+
+
+
+
+# practice
+
+# ログイン
+mongo
+
+use study
+
+db.stats()
+db.user.insert({name:'mr.a',age:10,gender:'m',hobbies:['programing']});
+db.user.insert({name:'ms.c', age:30, gender:'f', hobbies:['programming', 'vi']});
+db.user.find();
+
