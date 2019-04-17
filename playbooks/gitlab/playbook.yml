@@ -20,8 +20,8 @@ sudo systemctl start postfix
 curl https://packages.gitlab.com/install/repositories/gitlab/gitlab-ee/script.rpm.sh | sudo bash
 
 
-# 公開するURLを入力してください（localhostでも大丈夫みたいだが。。。）
-sudo EXTERNAL_URL="ec2-54-250-245-128.ap-northeast-1.compute.amazonaws.com" yum install -y gitlab-ee
+# 公開するURLを入力してください（_でanyになります。）
+sudo EXTERNAL_URL="_" yum install -y gitlab-ee
 
 # disable SE Linux
 sudo setenforce 0
