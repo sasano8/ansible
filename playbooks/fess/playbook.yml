@@ -1,0 +1,47 @@
+
+# 前提
+# elastic searchが導入されていること
+
+yum install -y java-1.8.0-openjdk-devel
+
+# elastic searchとの連携設定
+echo "configsync.config_path: /var/lib/elasticsearch/config" >> sudo tee /etc/elasticsearch/elasticsearch.yml
+
+
+# fessのインストール
+curl -OL https://github.com/codelibs/fess/releases/download/fess-12.6.0/fess-12.6.0.rpm
+
+sudo rpm -ivh  fess-12.6.0.rpm
+
+
+# プラグインのインストール　１行ずつ実行します
+# installの後に--batch をつければ確認を省けるかも
+
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install org.codelibs:elasticsearch-analysis-fess:6.6.0
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install org.codelibs:elasticsearch-analysis-extension:6.6.0
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install org.codelibs:elasticsearch-configsync:6.6.0
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install org.codelibs:elasticsearch-dataformat:6.6.0
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install org.codelibs:elasticsearch-langfield:6.6.0
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install org.codelibs:elasticsearch-minhash:6.6.0
+sudo /usr/share/elasticsearch/bin/elasticsearch-plugin install org.codelibs:elasticsearch-learning-to-rank:6.6.0
+
+# サービスの自動起動
+sudo /sbin/chkconfig --add elasticsearch
+sudo /sbin/chkconfig --add fess
+
+# サービスの自動起動
+sudo /bin/systemctl daemon-reload
+sudo /bin/systemctl enable elasticsearch.service
+sudo /bin/systemctl enable fess.service
+
+
+# コメントを外す
+shfile="/usr/share/fess/bin/fess.in.sh"
+sudo sed -i -e "s/^#ES_HTTP_URL/ES_HTTP_URL/g" $shfile
+sudo sed -i -e "s/^#ES_TRANSPORT_URL=/ES_TRANSPORT_URL=/g" $shfile
+sudo sed -i -e "s/^#FESS_DICTIONARY_PATH=/FESS_DICTIONARY_PATH=/g" $shfile
+
+# サービス起動
+systemctl start elasticsearch.service
+systemctl start fess.service
+
