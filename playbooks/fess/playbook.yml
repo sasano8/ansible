@@ -48,4 +48,15 @@ systemctl start fess.service
 elasticsearch.http.url=http://localhost:9201 ⇒ 9200
 
 
+# うまくいかない場合は以下を試してみる
+sudo systemctl stop fess.service
+curl -XDELETE http://localhost:9200/.configsync
+sudo systemctl restart elastic.service
+curl http://localhost:9200/.configsync
+sudo systemctl start fess.service
+
+
+
+
+
 
