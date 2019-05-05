@@ -5,7 +5,7 @@
 yum install -y java-1.8.0-openjdk-devel
 
 # elastic searchとの連携設定
-echo "configsync.config_path: /var/lib/elasticsearch/config" >> sudo tee /etc/elasticsearch/elasticsearch.yml
+echo "configsync.config_path: /var/lib/elasticsearch/config" >> sudo tee -a /etc/elasticsearch/elasticsearch.yml
 
 
 # fessのインストール
@@ -44,4 +44,8 @@ sudo sed -i -e "s/^#FESS_DICTIONARY_PATH=/FESS_DICTIONARY_PATH=/g" $shfile
 # サービス起動
 systemctl start elasticsearch.service
 systemctl start fess.service
+
+elasticsearch.http.url=http://localhost:9201 ⇒ 9200
+
+
 
