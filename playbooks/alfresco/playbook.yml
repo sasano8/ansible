@@ -1,0 +1,17 @@
+
+# 前提ツール
+sudo yum install -y wget
+
+# 前提ライブラリ
+sudo yum -y install fontconfig libSM libICE libXrender libXext cups-libs libGLU cairo
+
+wget https://download.alfresco.com/release/community/201707-build-00028/alfresco-community-installer-201707-linux-x64.bin
+chmod +x alfresco-community-installer-201707-linux-x64.bin
+
+sudo ./alfresco-community-installer-201707-linux-x64.bin //
+--installer-language ja
+
+
+curl http://<hostname>:8080/share
+
+
