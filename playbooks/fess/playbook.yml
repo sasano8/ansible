@@ -5,7 +5,7 @@
 yum install -y java-1.8.0-openjdk-devel
 
 # elastic searchとの連携設定
-echo "configsync.config_path: /var/lib/elasticsearch/config" >> sudo tee -a /etc/elasticsearch/elasticsearch.yml
+echo "configsync.config_path: /var/lib/elasticsearch/config" | sudo tee -a /etc/elasticsearch/elasticsearch.yml
 
 
 # fessのインストール
