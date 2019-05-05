@@ -24,7 +24,7 @@ sudo yum -y install elasticsearch
 sudo ls -ld /var/log/elasticsearch
 
 # Check SysV or SystemV(SystemV前提とする)
-ps - p 1
+ps -p 1
 
 
 
@@ -72,127 +72,12 @@ LimitMEMLOCK=infinity
 
 
 
-
 # ===============================================
-# kibanaのインストール
+# elastic search および kibanaをdockerで導入する
 # ===============================================
 
-sudo yum install -y wget
-
-#wget https://artifacts.elastic.co/downloads/kibana/kibana-6.7.0-x86_64.rpm
-#sudo yum localinstall -y kibana-6.7.0-x86_64.rpm
-
-
-sudo tee /etc/yum.repos.d/kibana.repo << EOS
-[kibana-6.x]
-name=Kibana repository for 6.x packages
-baseurl=https://artifacts.elastic.co/packages/6.x/yum
-gpgcheck=1
-gpgkey=https://artifacts.elastic.co/GPG-KEY-elasticsearch
-enabled=1
-autorefresh=1
-type=rpm-md
-EOS
-
-sudo yum install -y kibana
-
-# httpポートを指定
-echo 'server.port: 5601' | sudo tee -a /etc/kibana/kibana.yml
-
-# リモートアクセスを許可する
-echo 'server.host: "0.0.0.0"' | sudo tee -a /etc/kibana/kibana.yml
-
-# elasticsearch接続先を指定
-echo 'elasticsearch.hosts: ["http://localhost:9200"]' | sudo tee -a /etc/kibana/kibana.yml
-
-
-sudo systemctl daemon-reload
-sudo systemctl enable kibana.service
-sudo systemctl start kibana.service
-
-
-# ポート確認
-ss -antu
-
-curl -GET localhost:5601
-sudo journalctl --unit kibana
-
-sudo setenforce 0
-
-/usr/share/kibana/bin/kibana-plugin
-
-
-# rpmでインストールできなかったのでdocker使ってみる
-
-
-
-yum-config-manager --enable Extraｓ
-
-
-sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-sudo yum install -y http://vault.centos.org/centos/7.3.1611/extras/x86_64/Packages/container-selinux-2.9-4.el7.noarch.rpm
-sudo yum install -y docker-ce
-
-
-
-# RPMでのインストールはここから（上は不要）
-[docker-docs-ja](http://docs.docker.jp/engine/installation/linux/docker-ce/centos.html)
-
-sudo yum install -y http://vault.centos.org/centos/7.3.1611/extras/x86_64/Packages/container-selinux-2.9-4.el7.noarch.rpm
-sudo yum install -y yum-utils device-mapper-persistent-data lvm2
-
-sudo yum-config-manager --add-repo \
-    https://download.docker.com/linux/centos/docker-ce.repo
-
-sudo yum-config-manager --enable docker-ce-edge
-sudo yum-config-manager --enable docker-ce-test
-
-sudo yum makecache fast
-
-sudo yum -y install docker-ce
-
-sudo systemctl start docker
-sudo docker run hello-world
-
-
-
-sudo apt-get update
-sudo apt-get install -y \
-    apt-transport-https \
-    ca-certificates \
-    curl \
-    software-properties-common
-
-curl -fsSL https://download.docker.com/linux/ubuntu/gpg | sudo apt-key add -
-
-sudo apt-key fingerprint 0EBFCD88
-pub   rsa4096 2017-02-22 [SCEA]
-      9DC8 5822 9FC7 DD38 854A  E2D8 8D81 803C 0EBF CD88
-uid           [ unknown] Docker Release (CE deb) <docker@docker.com>
-sub   rsa4096 2017-02-22 [S]
-
-sudo add-apt-repository \
-   "deb [arch=amd64] https://download.docker.com/linux/ubuntu \
-   $(lsb_release -cs) \
-   stable"
-   
-sudo apt-get update
-sudo apt-get install -y docker-ce
-
-docker version
-
-
-
-# 一般ユーザーでも使えるようにdockerグループに所属させる
-sudo usermod -a -G docker ec2-user
-sudo usermod -a -G docker ubuntu
-
-sudo service docker start
-sudo systemctl start docker.service
-
-sudo curl -L https://github.com/docker/compose/releases/download/1.24.0/docker-compose-`uname -s`-`uname -m` -o /usr/local/bin/docker-compose
-sudo chmod +x /usr/local/bin/docker-compose
-docker-compose version
+# 前提
+# docker およびに docker composeが導入されていること
 
 
 sudo sysctl -w vm.max_map_count=262144
