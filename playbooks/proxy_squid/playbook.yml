@@ -1,0 +1,47 @@
+
+
+sudo yum install -y squid
+
+
+# 設定の編集
+vi /etc/squid/squid.conf
+
+コメントアウトする前
+# And finally deny all other access to this proxy
+http_access deny all
+
+コメントアウトした後 
+# And finally deny all other access to this proxy
+# http_access deny all
+
+
+# 最終行に以下を追記
+acl myacl src xxx.xxx.xxx.xxx/255.255.255.255
+http_access allow myacl
+http_access deny all
+#　↑　http_access deny all より上の部分でマッチしていれば接続OKになる
+
+forwarded_for off
+header_access X-Forwarded-For deny all
+header_access Via deny all
+header_access Cache-Control deny all
+
+
+
+
+# 起動処理
+sudo squid -z
+sudo systemctl start squid.service
+
+
+sudo setenforce 0
+
+# ファイアウォールの設定（AWS上なのでいらない）
+# sudo yum install firewalld
+
+# sudo firewall-cmd --add-source=xxx.xxx.xxx.xxx/32 --zone=public
+# sudo firewall-cmd --reload
+
+
+# ログの確認
+sudo tail -10  /var/log/squid/access.log
