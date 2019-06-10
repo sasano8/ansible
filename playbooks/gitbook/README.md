@@ -18,3 +18,6 @@ curl http://localhost:4000
 ```
 
 
+# 執筆環境構築参考
+https://www.gensobunya.net/portfolio/md2doujin/
+
