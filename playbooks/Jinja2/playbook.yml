@@ -10,12 +10,18 @@ python test.py
 
 udo python3.6 -m pip install Django
 
+# create project
 django-admin.py startproject my_project
+
+# 簡易データベース作成
 python manage.py migrate
 
 # hostを許可しないと外部に公開できません。
-vi setting.py
-ALLOWED_HOSTS = [ 'localhost' ]
+vi {project_name}/{project_name}/setting.py
 
-python manage.py runserver localhost:80
+# 本番ではセキュリティを強化すること
+ALLOWED_HOSTS = ['*']
+
+# localhostではlocal上からしか接続できない。接続先ipなどを入力
+sudo python36 manage.py runserver localhost:80
 
