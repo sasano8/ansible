@@ -1,0 +1,32 @@
+
+# gitのインストール
+sudo yum install git
+
+# rbenvを取得します。
+git clone https://github.com/rbenv/rbenv.git ~/.rbenv
+
+# rbenvのパスを有効化
+echo 'export PATH="$HOME/.rbenv/bin:$PATH"' >> ~/.bash_profile
+~/.rbenv/bin/rbenv init
+source ~/.bash_profile
+
+
+# rbenvがインストールされたことを確認します。
+rbenv -v
+
+# ruby-buildをインストールします。
+git clone https://github.com/rbenv/ruby-build.git ~/.rbenv/plugins/ruby-build
+
+
+# ruby-buildがインストールできるとrbenvのpluginであるrbenv installコマンドが使用できるようになります。
+sudo ~/.rbenv/plugins/ruby-build/install.sh
+
+
+# インストール可能なRubyのバージョン一覧
+rbenv install -l
+
+
+# Rubyのインストール
+sudo yum install -y gcc openssl-devel readline-devel zlib-devel bzip2 make
+rbenv install 2.4.1
+
