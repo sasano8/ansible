@@ -30,3 +30,15 @@ rbenv install -l
 sudo yum install -y gcc openssl-devel readline-devel zlib-devel bzip2 make
 rbenv install 2.4.1
 
+# Gemのインストール
+sudo yum install gem
+
+# bundlerのインストール
+gem install bundler
+
+gem install asciidoctor
+
+# テスト　拡張子は .adoc または .asciidoc
+echo "何かドキュメントを書く" > testdoc.asciidoc
+
+asciidoctor testdoc.asciidoc
