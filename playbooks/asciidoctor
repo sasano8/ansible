@@ -42,3 +42,10 @@ gem install asciidoctor
 echo "何かドキュメントを書く" > testdoc.asciidoc
 
 asciidoctor testdoc.asciidoc
+
+
+# その他
+# wordへの変換は一度docbookを経由させるらしい？？
+# docbookは不変的なフォーマットらしい？？
+
+# sphinxも気になる
